@@ -4,4 +4,4 @@
 *.snap
 *.log
 *.resources
-.metadata/
+.metadata/.plugins/org*.
