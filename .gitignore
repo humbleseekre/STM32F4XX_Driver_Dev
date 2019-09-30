@@ -1,0 +1,6 @@
+*.o
+*.hex
+*.xml
+*.snap
+*.log
+*.resources
