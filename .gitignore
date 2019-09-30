@@ -5,3 +5,5 @@
 *.log
 *.resources
 .metadata/.plugins/org*.
+.metadata/
+STM32F4xx_driver_dev/Debug/
