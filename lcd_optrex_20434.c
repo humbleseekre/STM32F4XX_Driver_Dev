@@ -1,39 +1,27 @@
 
 //***** Header files *****//
-#include <stdbool.h>
-#include "stm32f4xx_hal.h"
-#include <stdlib.h>
 #include "lcd_optrex_20434.h"
 
+/*-----------------------LDC PIN OUT BOARD CONNECTION----------------------------------*/
+/* PE1  -> EN 
+/* PE0  -> RS
+/* PD12 -> RW
+/* --------
+/* PB12 -> D0
+/* PB13 -> D1
+/* PB14 -> D2
+/* PB15 -> D3
+/* PD08 -> D4
+/* PD09 -> D5
+/* PD10 -> D6 
+/* PD11 -> D7 
+*/
+
 //***** Variables *****//
-//static const uint32_t writeTimeConstant = 10;
 static uint8_t mode_8_4_I2C = 1;
-/*//static GPIO_TypeDef* PORT_RS_and_E;							  // RS and E PORT
-//static uint16_t PIN_RS, PIN_E, PIN_RW;									  // RS and E pins
-//static GPIO_TypeDef* PORT_LSB;	
-
-// LSBs D0, D1, D2 and D3 PORT
-#define D0_PIN          (0)
-#define D1_PIN          (1)
-#define D2_PIN          (2)
-#define D3_PIN          (3)	// LSBs D0, D1, D2 and D3 pins
-
-//static GPIO_TypeDef* PORT_MSB;		
-
-// MSBs D5, D6, D7 and D8 PORT
-#define D4_PIN          (4)
-#define D5_PIN          (5)
-#define D6_PIN          (6)
-#define D7_PIN          (7)
-
-
-void HAL_Lcd_BusyWait()
-{
-    
-}*/
 
 //2) RS control
-static void LCD1602_RS(bool state)
+void LCD1602_RS(bool state)
 {
 	if(state)
     {
@@ -45,7 +33,7 @@ static void LCD1602_RS(bool state)
     }
 }
 
-static void LCD1602_RW(bool state)
+void LCD1602_RW(bool state)
 {
 	if(state)
     {
@@ -58,8 +46,9 @@ static void LCD1602_RW(bool state)
 }
 
 //3) Write Parallel interface
-static void LCD1602_write(uint8_t byte)
+void LCD1602_write(uint8_t byte)
 {
+	//testInfiteLoop();
 	uint8_t LSB_nibble = byte&0xF, MSB_nibble = (byte>>4)&0xF;
 	 
 	if(mode_8_4_I2C == 1)		//8bits mode
@@ -67,14 +56,14 @@ static void LCD1602_write(uint8_t byte)
 		//write data to output pins
 		//LSB data
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, (GPIO_PinState)(LSB_nibble&0x1));
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, (GPIO_PinState)(LSB_nibble&0x2));
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, (GPIO_PinState)(LSB_nibble&0x4));
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, (GPIO_PinState)(LSB_nibble&0x8));
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, (GPIO_PinState)(LSB_nibble>>1&0x1));
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, (GPIO_PinState)(LSB_nibble>>2&0x1));
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, (GPIO_PinState)(LSB_nibble>>3&0x1));
 		//MSB data
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, (GPIO_PinState)(MSB_nibble&0x1));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, (GPIO_PinState)(MSB_nibble&0x2));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, (GPIO_PinState)(MSB_nibble&0x4));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, (GPIO_PinState)(MSB_nibble&0x8));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, (GPIO_PinState)(MSB_nibble>>1&0x1));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, (GPIO_PinState)(MSB_nibble>>2&0x1));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, (GPIO_PinState)(MSB_nibble>>3&0x1));
 		//Write the Enable pulse
 		//LCD1602_EnablePulse();
 	}
@@ -83,23 +72,23 @@ static void LCD1602_write(uint8_t byte)
 		//write data to output pins
 		//MSB data
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, (GPIO_PinState)(MSB_nibble&0x1));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, (GPIO_PinState)(MSB_nibble&0x2));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, (GPIO_PinState)(MSB_nibble&0x4));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, (GPIO_PinState)(MSB_nibble&0x8));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, (GPIO_PinState)(MSB_nibble>>1&0x1));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, (GPIO_PinState)(MSB_nibble>>2&0x1));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, (GPIO_PinState)(MSB_nibble>>3&0x1));
 		//Write the Enable pulse
 		//LCD1602_EnablePulse();
 		
 		//LSB data
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, (GPIO_PinState)(LSB_nibble&0x1));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, (GPIO_PinState)(LSB_nibble&0x2));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, (GPIO_PinState)(LSB_nibble&0x4));
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, (GPIO_PinState)(LSB_nibble&0x8));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, (GPIO_PinState)(LSB_nibble>>1&0x1));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, (GPIO_PinState)(LSB_nibble>>2&0x1));
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, (GPIO_PinState)(LSB_nibble>>3&0x1));
 		//Write the Enable pulse
 		//LCD1602_EnablePulse();
 	}
 }
 
-static void LCD1602_writeCommand(uint8_t command)
+void LCD1602_writeCommand(uint8_t command)
 {
 	//Set RS to 0
 	LCD1602_RS(false);
@@ -159,4 +148,11 @@ void lcd_init()
 
     //step 12: Function set command
     LCD1602_writeCommand(0x1);
+}
+
+void testInfiteLoop()
+{
+    while(1)
+    {
+    }
 }
