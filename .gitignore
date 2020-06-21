@@ -1,7 +1,4 @@
 *.mxproject
-Drivers/
-Inc/
 *.ioc
 MDK-ARM/
-Src/
 
