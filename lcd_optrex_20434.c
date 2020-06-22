@@ -2,23 +2,31 @@
 //***** Header files *****//
 #include "lcd_optrex_20434.h"
 
-/*-----------------------LDC PIN OUT BOARD CONNECTION----------------------------------*/
-/* PE1  -> EN 
-/* PE0  -> RS
-/* PD12 -> RW
-/* --------
-/* PB12 -> D0
-/* PB13 -> D1
-/* PB14 -> D2
-/* PB15 -> D3
-/* PD08 -> D4
-/* PD09 -> D5
-/* PD10 -> D6 
-/* PD11 -> D7 
+/*-----------------------LDC PIN OUT BOARD CONNECTION----------------------------------/
+* PE1  -> EN 
+* PE0  -> RS
+* PD12 -> RW
+* --------
+* PB12 -> D0
+* PB13 -> D1
+* PB14 -> D2
+* PB15 -> D3
+* PD08 -> D4
+* PD09 -> D5
+* PD10 -> D6 
+* PD11 -> D7 
 */
 
 //***** Variables *****//
 static uint8_t mode_8_4_I2C = 1;
+
+void lcd_busywait(void)
+{
+	while(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_11) == true)
+	{
+
+	}
+}
 
 //2) RS control
 void LCD1602_RS(bool state)
@@ -98,11 +106,11 @@ void LCD1602_writeCommand(uint8_t command)
 	LCD1602_write(command);
 }
 
-void lcd_init()
+void lcd_init(void)
 {
 	//Initialise LCD
 	//1. Wait at least 15ms
-	HAL_Delay(30);
+	HAL_Delay(300);
 	
 	//step 2: Unlock Command
     // RS=0, R/W=0, DB7-DB0= 30H
@@ -110,47 +118,51 @@ void lcd_init()
 	LCD1602_writeCommand(0x30);
 
     //Step 3: Wait for more than 4.1 ms
-    HAL_Delay(10);
+    HAL_Delay(100);
 
     //step 4: Unlock Command
     // RS=0, R/W=0, DB7-DB0= 30H
 	LCD1602_writeCommand(0x30);
 
     //Step 5: Wait for more than 1 ms
-    HAL_Delay(2);
+	lcd_busywait();
+    HAL_Delay(20);
 
     //step 6: Poll for busy BF = 0
-     //HAL_Lcd_BusyWait();
 
      //step 7: Function set command
      LCD1602_writeCommand(0x38);
 
     //step 7: Poll for busy BF = 0
-    HAL_Delay(1);
+	lcd_busywait();
+	HAL_Delay(10);
 
     //step 8: Function set command
     LCD1602_writeCommand(0x8);
 
     //step 9: Poll for busy BF = 0
-    HAL_Delay(1);
+	lcd_busywait();
+    HAL_Delay(10);
 
     //step 10: Function set command
     LCD1602_writeCommand(0xC);
 
     //step 11: Poll for busy BF = 0
-    HAL_Delay(1);
+    lcd_busywait();
+	HAL_Delay(10);
 
     //step 12: Function set command
     LCD1602_writeCommand(0x6);
 
     //step 13: Poll for busy BF = 0
-    HAL_Delay(1);
+	lcd_busywait();
+    HAL_Delay(10);
 
     //step 12: Function set command
     LCD1602_writeCommand(0x1);
 }
 
-void testInfiteLoop()
+void testInfiteLoop(void)
 {
     while(1)
     {

@@ -21,9 +21,10 @@ void LCD1602_RS(bool state);
 void LCD1602_RW(bool state);
 void LCD1602_write(uint8_t byte);
 void LCD1602_writeCommand(uint8_t command);
-void lcd_init();
+void lcd_init(void);
+void lcd_busywait(void);
 
-void testInfiteLoop();
+void testInfiteLoop(void);
 //void HAL_Lcd_BusyWait();
 
 #endif /*LCD_OPTREX_20434_H*/
