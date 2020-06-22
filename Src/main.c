@@ -87,11 +87,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  
   /* USER CODE BEGIN 2 */
-  /*LCD1602_Begin8BIT(RS_GPIO_Port, RS_Pin, EN_Pin, D0_GPIO_Port, D0_Pin, D1_Pin, 
-                    D2_Pin, D2_Pin, D4_GPIO_Port, D4_Pin, D5_Pin, D6_Pin, D7_Pin);
-                    
-  LCD1602_print("Hello World");*/
   lcd_init();
 
   /* USER CODE END 2 */
